@@ -1,0 +1,188 @@
+package com.thirdeye3.propertymanager.services.impl;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.thirdeye3.propertymanager.entities.Configuration;
+import com.thirdeye3.propertymanager.entities.Property;
+import com.thirdeye3.propertymanager.exceptions.InvalidPropertyKeyException;
+import com.thirdeye3.propertymanager.exceptions.PropertyNotFoundException;
+import com.thirdeye3.propertymanager.exceptions.UnauthorizedUpdateException;
+import com.thirdeye3.propertymanager.repositories.PropertyRepo;
+import com.thirdeye3.propertymanager.services.ConfigurationService;
+import com.thirdeye3.propertymanager.services.MachineService;
+import com.thirdeye3.propertymanager.services.PropertyService;
+
+@Service
+public class PropertyServiceImpl implements PropertyService {
+
+    private static final Logger logger = LoggerFactory.getLogger(PropertyServiceImpl.class);
+
+    @Autowired
+    private PropertyRepo propertyRepo;
+
+    @Autowired
+    private MachineService machineService;
+
+    private Map<String, Object> properties = null;
+
+    @Autowired
+    private ConfigurationService configurationService;
+
+    @Override
+    public void updateProperties() {
+        Property property = propertyRepo.findById(configurationService.getConfigurationId())
+                .orElseThrow(() -> new PropertyNotFoundException(configurationService.getConfigurationId()));
+
+        Map<String, Object> map = Map.ofEntries(
+            Map.entry("NO_OF_WEBSCRAPPER_MARKET", property.getNoOfWebscrapperMarket()),
+            Map.entry("NO_OF_WEBSCRAPPER_USER", property.getNoOfWebscrapperUser()),
+            Map.entry("START_TIME_HOUR", property.getStartTimeHour()),
+            Map.entry("START_TIME_MINUTE", property.getStartTimeMinute()),
+            Map.entry("START_TIME_SECOND", property.getStartTimeSecond()),
+            Map.entry("END_TIME_HOUR", property.getEndTimeHour()),
+            Map.entry("END_TIME_MINUTE", property.getEndTimeMinute()),
+            Map.entry("END_TIME_SECOND", property.getEndTimeSecond()),
+            Map.entry("MP_START_HOUR", property.getMpStartHour()),
+            Map.entry("MP_START_MINUTE", property.getMpStartMinute()),
+            Map.entry("MP_START_SECOND", property.getMpStartSecond()),
+            Map.entry("MP_END_HOUR", property.getMpEndHour()),
+            Map.entry("MP_END_MINUTE", property.getMpEndMinute()),
+            Map.entry("MP_END_SECOND", property.getMpEndSecond()),
+            Map.entry("EP_START_HOUR", property.getEpStartHour()),
+            Map.entry("EP_START_MINUTE", property.getEpStartMinute()),
+            Map.entry("EP_START_SECOND", property.getEpStartSecond()),
+            Map.entry("EP_END_HOUR", property.getEpEndHour()),
+            Map.entry("EP_END_MINUTE", property.getEpEndMinute()),
+            Map.entry("EP_END_SECOND", property.getEpEndSecond()),
+            Map.entry("SIZE_TO_LOAD_STOCK", property.getSizeToLoadStock()),
+            Map.entry("MAXIMUM_MESSAGE_LENGTH", property.getMaximumMessageLength()),
+            Map.entry("MAXIMUM_MESSAGE_READ_FROM_MESSAGE_BROKER", property.getMaximumMessageReadFromMessageBroker()),
+            Map.entry("TELEGRAMBOT_USERNAME", property.getTelegramBotUserName()),
+            Map.entry("TELEGRAMBOT_TOKEN", property.getTelegramBotToken()),
+            Map.entry("NO_OF_TELEGRAMBOT", property.getNoOfTelegrambot())
+            
+        );
+
+        this.properties = map;
+        logger.info("Loaded properties (uppercase keys): {}", properties);
+    }
+
+    @Override
+    public void updateProperty(Map<String, Object> updates, String password) {
+        if (!configurationService.allowToChange(password)) {
+            throw new UnauthorizedUpdateException();
+        }
+
+        Property property = propertyRepo.findById(configurationService.getConfigurationId())
+                .orElseThrow(() -> new PropertyNotFoundException(configurationService.getConfigurationId()));
+
+        updates.forEach((key, value) -> {
+            switch (key.toUpperCase()) {
+                case "NO_OF_WEBSCRAPPER_MARKET" 				  -> {
+                    property.setNoOfWebscrapperMarket((Integer) value);
+                    machineService.updateMachines(1, property.getNoOfWebscrapperMarket());
+                }
+                case "NO_OF_WEBSCRAPPER_USER"   				  -> {
+                    property.setNoOfWebscrapperUser((Integer) value);
+                    machineService.updateMachines(2, property.getNoOfWebscrapperUser());
+                }
+                case "NO_OF_TELEGRAMBOT"   				          -> {
+                    property.setNoOfTelegrambot((Integer) value);
+                    machineService.updateMachines(3, property.getNoOfTelegrambot());
+                }
+                
+                case "START_TIME_HOUR"              				  -> property.setStartTimeHour((Integer) value);
+                case "START_TIME_MINUTE"            				  -> property.setStartTimeMinute((Integer) value);
+                case "START_TIME_SECOND"            				  -> property.setStartTimeSecond((Integer) value);
+                case "END_TIME_HOUR"                				  -> property.setEndTimeHour((Integer) value);
+                case "END_TIME_MINUTE"              				  -> property.setEndTimeMinute((Integer) value);
+                case "END_TIME_SECOND"              				  -> property.setEndTimeSecond((Integer) value);
+                case "MP_START_HOUR"                				  -> property.setMpStartHour((Integer) value);
+                case "MP_START_MINUTE"              				  -> property.setMpStartMinute((Integer) value);
+                case "MP_START_SECOND"              				  -> property.setMpStartSecond((Integer) value);
+                case "MP_END_HOUR"                  				  -> property.setMpEndHour((Integer) value);
+                case "MP_END_MINUTE"                				  -> property.setMpEndMinute((Integer) value);
+                case "MP_END_SECOND"                				  -> property.setMpEndSecond((Integer) value);
+                case "EP_START_HOUR"                				  -> property.setEpStartHour((Integer) value);
+                case "EP_START_MINUTE"              				  -> property.setEpStartMinute((Integer) value);
+                case "EP_START_SECOND"              				  -> property.setEpStartSecond((Integer) value);
+                case "EP_END_HOUR"                  				  -> property.setEpEndHour((Integer) value);
+                case "EP_END_MINUTE"                				  -> property.setEpEndMinute((Integer) value);
+                case "EP_END_SECOND"                				  -> property.setEpEndSecond((Integer) value);
+                case "BUFFER_TIME_GAP_IN_SECONDS"   				  -> property.setBufferTimeGapInSeconds((Integer) value); 
+                case "SIZE_TO_LOAD_STOCK"           				  -> property.setSizeToLoadStock((Integer) value); 
+                case "MAXIMUM_MESSAGE_LENGTH"       				  -> property.setMaximumMessageLength((Integer) value); 
+                case "MAXIMUM_MESSAGE_READ_FROM_MESSAGE_BROKER"       -> property.setMaximumMessageReadFromMessageBroker((Integer) value);
+                case "TELEGRAMBOT_USERNAME"                           -> property.setTelegramBotUserName((String) value);
+                case "TELEGRAMBOT_TOKEN"                              -> property.setTelegramBotToken((String) value);
+                
+
+                default -> throw new InvalidPropertyKeyException(key);
+            }
+        });
+
+        propertyRepo.save(property);
+        logger.info("Updated property with id={} using updates: {}", configurationService.getConfigurationId(), updates);
+    }
+
+    @Override
+    public Map<String, Object> getProperties() {
+        if (properties == null) {
+            updateProperties();
+        }
+        return this.properties;
+    }
+
+    @Override
+    public Map<String, Object> getPropertiesForWebscrapper(Integer machineid, String machineUniqueCode) {
+        if (properties == null) {
+            updateProperties();
+        }
+        Map<String, Object> propertiesForWebscrapper = new HashMap<>();
+        propertiesForWebscrapper.put("MACHINE_NO", machineService.validateMachine(machineid, machineUniqueCode));
+        propertiesForWebscrapper.put("START_TIME_HOUR", properties.get("START_TIME_HOUR"));
+        propertiesForWebscrapper.put("START_TIME_MINUTE", properties.get("START_TIME_MINUTE"));
+        propertiesForWebscrapper.put("START_TIME_SECOND", properties.get("START_TIME_SECOND"));
+        propertiesForWebscrapper.put("END_TIME_HOUR", properties.get("END_TIME_HOUR"));
+        propertiesForWebscrapper.put("END_TIME_MINUTE", properties.get("END_TIME_MINUTE"));
+        propertiesForWebscrapper.put("END_TIME_SECOND", properties.get("END_TIME_SECOND"));
+        return propertiesForWebscrapper;
+    }
+    
+    @Override
+    public Map<String, Object> getPropertiesForTelegramBot(Integer machineid, String machineUniqueCode) {
+        if (properties == null) {
+            updateProperties();
+        }
+        Map<String, Object> propertiesForTelegrambot = new HashMap<>();
+        propertiesForTelegrambot.put("MACHINE_NO", machineService.validateMachine(machineid, machineUniqueCode));
+        propertiesForTelegrambot.put("TELEGRAMBOT_USERNAME", properties.get("TELEGRAMBOT_USERNAME"));
+        propertiesForTelegrambot.put("TELEGRAMBOT_TOKEN", properties.get("TELEGRAMBOT_TOKEN"));
+        propertiesForTelegrambot.put("MAXIMUM_MESSAGE_READ_FROM_MESSAGE_BROKER", properties.get("MAXIMUM_MESSAGE_READ_FROM_MESSAGE_BROKER"));
+        return propertiesForTelegrambot;
+    }
+
+    @Override
+    public void generateFirstProperty() {
+        Property property = new Property(
+                configurationService.getConfigurationId(),
+                0, 0, 0,
+                0, 0, 0,
+                0, 0, 0,
+                0, 0, 0,
+                0, 0, 0,
+                0, 0, 0,  
+                0, 0, 0,
+                0, 0, 0,
+                "", "", 0
+        );
+        propertyRepo.save(property);
+    }
+}
