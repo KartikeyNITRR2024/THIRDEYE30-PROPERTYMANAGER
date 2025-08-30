@@ -129,6 +129,7 @@ public class PropertyServiceImpl implements PropertyService {
         });
 
         propertyRepo.save(property);
+        updateProperties();
         logger.info("Updated property with id={} using updates: {}", configurationService.getConfigurationId(), updates);
     }
 
