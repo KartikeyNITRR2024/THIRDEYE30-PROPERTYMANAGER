@@ -1,12 +1,15 @@
 package com.thirdeye3.propertymanager.services;
 
+import java.util.List;
 import java.util.Map;
+
+import com.thirdeye3.propertymanager.dtos.ServiceStatus;
 
 public interface PropertyService {
 
 	Map<String, Object> getProperties();
 
-	void updateProperty(Map<String, Object> updates, String password);
+	List<ServiceStatus> updateProperty(Map<String, Object> updates, String password);
 
 	void updateProperties();
 

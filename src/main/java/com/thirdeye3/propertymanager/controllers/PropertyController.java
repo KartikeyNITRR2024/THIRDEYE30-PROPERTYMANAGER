@@ -1,11 +1,13 @@
 package com.thirdeye3.propertymanager.controllers;
 
 import com.thirdeye3.propertymanager.dtos.Response;
+import com.thirdeye3.propertymanager.dtos.ServiceStatus;
 import com.thirdeye3.propertymanager.dtos.UpdateProperty;
 import com.thirdeye3.propertymanager.services.PropertyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -31,9 +33,8 @@ public class PropertyController {
     }
 
     @PostMapping("/update")
-    public Response<Void> updateProperties(
+    public Response<List<ServiceStatus>> updateProperties(
             @RequestBody UpdateProperty updateProperty) {
-        propertyService.updateProperty(updateProperty.getUpdates(), updateProperty.getPassword());
-        return new Response<>(true, 0, null, null);
+        return new Response<>(true, 0, null, propertyService.updateProperty(updateProperty.getUpdates(), updateProperty.getPassword()));
     }
 }

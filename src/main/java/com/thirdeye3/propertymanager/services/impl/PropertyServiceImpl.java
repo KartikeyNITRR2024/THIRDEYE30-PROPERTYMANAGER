@@ -1,6 +1,7 @@
 package com.thirdeye3.propertymanager.services.impl;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -9,11 +10,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.thirdeye3.propertymanager.dtos.ServiceStatus;
 import com.thirdeye3.propertymanager.entities.Configuration;
 import com.thirdeye3.propertymanager.entities.Property;
 import com.thirdeye3.propertymanager.exceptions.InvalidPropertyKeyException;
 import com.thirdeye3.propertymanager.exceptions.PropertyNotFoundException;
 import com.thirdeye3.propertymanager.exceptions.UnauthorizedUpdateException;
+import com.thirdeye3.propertymanager.externalcontrollers.AllMicroservicesClient;
 import com.thirdeye3.propertymanager.repositories.PropertyRepo;
 import com.thirdeye3.propertymanager.services.ConfigurationService;
 import com.thirdeye3.propertymanager.services.MachineService;
@@ -34,6 +37,9 @@ public class PropertyServiceImpl implements PropertyService {
 
     @Autowired
     private ConfigurationService configurationService;
+    
+    @Autowired
+    private AllMicroservicesClient allMicroservicesClient;
 
     @Override
     public void updateProperties() {
@@ -75,7 +81,7 @@ public class PropertyServiceImpl implements PropertyService {
     }
 
     @Override
-    public void updateProperty(Map<String, Object> updates, String password) {
+    public List<ServiceStatus> updateProperty(Map<String, Object> updates, String password) {
         if (!configurationService.allowToChange(password)) {
             throw new UnauthorizedUpdateException();
         }
@@ -127,10 +133,11 @@ public class PropertyServiceImpl implements PropertyService {
                 default -> throw new InvalidPropertyKeyException(key);
             }
         });
-
         propertyRepo.save(property);
         updateProperties();
+        List<ServiceStatus> serviceStatuses = allMicroservicesClient.getServiceStatuses("/api/updateinitiatier");
         logger.info("Updated property with id={} using updates: {}", configurationService.getConfigurationId(), updates);
+        return serviceStatuses;
     }
 
     @Override

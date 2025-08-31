@@ -1,4 +1,4 @@
-package com.thirdeye3.propertymanager.config;
+package com.thirdeye3.propertymanager.configs;
 
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.apache.catalina.connector.Connector;
