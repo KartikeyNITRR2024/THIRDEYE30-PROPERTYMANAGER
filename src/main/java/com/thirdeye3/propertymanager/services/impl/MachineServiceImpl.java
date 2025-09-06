@@ -26,6 +26,9 @@ public class MachineServiceImpl implements MachineService {
 	@Autowired
 	private MachineRepo machineRepo;
 	
+	@Autowired
+	private CodeGenerator codeGenerator;
+	
 	private Map<String, Machine> machines = null;
 	
 	private Integer type1MachinesCount = null;
@@ -147,7 +150,7 @@ public class MachineServiceImpl implements MachineService {
 		for (int i = 0; i < additionalCount; i++) {
 			Machine newMachine = new Machine();
 			newMachine.setTypeOfMachine(typeOfMachine);
-			newMachine.setMachineUniqueCode(CodeGenerator.generateUniqueCode(8));
+			newMachine.setMachineUniqueCode(codeGenerator.generateUniqueCode(8));
 			machineRepo.save(newMachine);
 		}
 	}

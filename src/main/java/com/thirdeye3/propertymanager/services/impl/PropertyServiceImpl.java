@@ -72,7 +72,10 @@ public class PropertyServiceImpl implements PropertyService {
             Map.entry("MAXIMUM_MESSAGE_READ_FROM_MESSAGE_BROKER", property.getMaximumMessageReadFromMessageBroker()),
             Map.entry("TELEGRAMBOT_USERNAME", property.getTelegramBotUserName()),
             Map.entry("TELEGRAMBOT_TOKEN", property.getTelegramBotToken()),
-            Map.entry("NO_OF_TELEGRAMBOT", property.getNoOfTelegrambot())
+            Map.entry("NO_OF_TELEGRAMBOT", property.getNoOfTelegrambot()),
+            Map.entry("MAXIMUM_NO_OF_USERS", property.getMaximumNoOfUsers()),
+            Map.entry("MAXIMUM_NO_OF_THRESOLD_PER_USER", property.getMaximumNoOfThresoldPerUser()),
+            Map.entry("MAXIMUM_NO_OF_HOLDED_STOCK_PER_USER", property.getMaximumNoOfHoldedStockPerUser())
             
         );
 
@@ -128,6 +131,9 @@ public class PropertyServiceImpl implements PropertyService {
                 case "MAXIMUM_MESSAGE_READ_FROM_MESSAGE_BROKER"       -> property.setMaximumMessageReadFromMessageBroker((Integer) value);
                 case "TELEGRAMBOT_USERNAME"                           -> property.setTelegramBotUserName((String) value);
                 case "TELEGRAMBOT_TOKEN"                              -> property.setTelegramBotToken((String) value);
+                case "MAXIMUM_NO_OF_USERS"                            -> property.setMaximumNoOfUsers((Integer) value);
+                case "MAXIMUM_NO_OF_THRESOLD_PER_USER"                -> property.setMaximumNoOfThresoldPerUser((Integer) value);
+                case "MAXIMUM_NO_OF_HOLDED_STOCK_PER_USER"            -> property.setMaximumNoOfHoldedStockPerUser((Integer) value);
                 
 
                 default -> throw new InvalidPropertyKeyException(key);
@@ -189,7 +195,8 @@ public class PropertyServiceImpl implements PropertyService {
                 0, 0, 0,  
                 0, 0, 0,
                 0, 0, 0,
-                "", "", 0
+                "", "", 0,
+                0, 0, 0
         );
         propertyRepo.save(property);
     }
