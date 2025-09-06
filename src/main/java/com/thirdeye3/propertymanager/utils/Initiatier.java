@@ -20,13 +20,23 @@ public class Initiatier {
 	
 	@Autowired
 	PropertyService propertyService;
+	
+	private boolean isFirstStarted = true;
     
     
 	@PostConstruct
     public void init() throws Exception{
         logger.info("Initializing Initiatier...");
         configurationService.generateFirstConfiguration();
-        propertyService.generateFirstProperty();
+        if(isFirstStarted)
+        {
+        	 propertyService.generateFirstProperty();
+        }
+        else
+        {
+        	propertyService.updateProperties();
+        }
+       
         logger.info("Initiatier initialized.");
     }
 
