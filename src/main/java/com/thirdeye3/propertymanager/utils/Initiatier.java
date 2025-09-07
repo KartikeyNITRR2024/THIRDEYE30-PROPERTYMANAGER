@@ -45,7 +45,6 @@ public class Initiatier {
         logger.info("Initiatier initialized.");
     }
 	
-    @Async
 	public List<ServiceStatus> updateAllInitiatier(Integer priority) {
         List<ServiceStatus> results = new ArrayList<>();
         List<String> services = discoveryClient.getServices();
