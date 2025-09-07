@@ -13,8 +13,6 @@ public interface PropertyService {
 
 	void updateProperties();
 
-	void generateFirstProperty();
-
 	Map<String, Object> getPropertiesForWebscrapper(Integer machineid, String machineUniqueCode);
 
 	Map<String, Object> getPropertiesForTelegramBot(Integer machineid, String machineUniqueCode);

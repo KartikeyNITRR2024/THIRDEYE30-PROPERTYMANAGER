@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.thirdeye3.propertymanager.dtos.ServiceStatus;
@@ -16,11 +17,11 @@ import com.thirdeye3.propertymanager.entities.Property;
 import com.thirdeye3.propertymanager.exceptions.InvalidPropertyKeyException;
 import com.thirdeye3.propertymanager.exceptions.PropertyNotFoundException;
 import com.thirdeye3.propertymanager.exceptions.UnauthorizedUpdateException;
-import com.thirdeye3.propertymanager.externalcontrollers.AllMicroservicesClient;
 import com.thirdeye3.propertymanager.repositories.PropertyRepo;
 import com.thirdeye3.propertymanager.services.ConfigurationService;
 import com.thirdeye3.propertymanager.services.MachineService;
 import com.thirdeye3.propertymanager.services.PropertyService;
+import com.thirdeye3.propertymanager.utils.Initiatier;
 
 @Service
 public class PropertyServiceImpl implements PropertyService {
@@ -39,7 +40,10 @@ public class PropertyServiceImpl implements PropertyService {
     private ConfigurationService configurationService;
     
     @Autowired
-    private AllMicroservicesClient allMicroservicesClient;
+    private Initiatier initiatier;
+    
+    @Value("${thirdeye.priority}")
+    private Integer priority;
 
     @Override
     public void updateProperties() {
@@ -141,9 +145,9 @@ public class PropertyServiceImpl implements PropertyService {
         });
         propertyRepo.save(property);
         updateProperties();
-        List<ServiceStatus> serviceStatuses = allMicroservicesClient.getServiceStatuses("/api/updateinitiatier");
+        List<ServiceStatus> serviceInitiatierStatuses = initiatier.updateAllInitiatier(priority);
         logger.info("Updated property with id={} using updates: {}", configurationService.getConfigurationId(), updates);
-        return serviceStatuses;
+        return serviceInitiatierStatuses;
     }
 
     @Override
@@ -181,23 +185,5 @@ public class PropertyServiceImpl implements PropertyService {
         propertiesForTelegrambot.put("TELEGRAMBOT_TOKEN", properties.get("TELEGRAMBOT_TOKEN"));
         propertiesForTelegrambot.put("MAXIMUM_MESSAGE_READ_FROM_MESSAGE_BROKER", properties.get("MAXIMUM_MESSAGE_READ_FROM_MESSAGE_BROKER"));
         return propertiesForTelegrambot;
-    }
-
-    @Override
-    public void generateFirstProperty() {
-        Property property = new Property(
-                configurationService.getConfigurationId(),
-                0, 0, 0,
-                0, 0, 0,
-                0, 0, 0,
-                0, 0, 0,
-                0, 0, 0,
-                0, 0, 0,  
-                0, 0, 0,
-                0, 0, 0,
-                "", "", 0,
-                0, 0, 0
-        );
-        propertyRepo.save(property);
     }
 }

@@ -10,4 +10,6 @@ public interface ConfigurationService {
 
 	void generateFirstConfiguration();
 
+	void generateFirstProperty();
+
 }

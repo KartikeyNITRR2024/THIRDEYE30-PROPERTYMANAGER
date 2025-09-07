@@ -9,9 +9,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.thirdeye3.propertymanager.entities.Configuration;
+import com.thirdeye3.propertymanager.entities.Property;
 import com.thirdeye3.propertymanager.exceptions.ConfigurationNotFoundException;
 import com.thirdeye3.propertymanager.exceptions.InvalidConfigurationPasswordException;
 import com.thirdeye3.propertymanager.repositories.ConfigurationRepo;
+import com.thirdeye3.propertymanager.repositories.PropertyRepo;
 import com.thirdeye3.propertymanager.services.ConfigurationService;
 
 @Service
@@ -22,6 +24,9 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
     @Value("${thirdeye.propertyPassword}")
     private String propertyPassword;
+    
+    @Autowired
+    private PropertyRepo propertyRepo;
 
     private static final Logger logger = LoggerFactory.getLogger(ConfigurationServiceImpl.class);
 
@@ -74,5 +79,24 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     {
     	Configuration config = new Configuration(1L, propertyId, propertyPassword);
     	configurationRepo.save(config);
+    	generateFirstProperty();
+    }
+	
+	@Override
+    public void generateFirstProperty() {
+        Property property = new Property(
+                getConfigurationId(),
+                0, 0, 0,
+                0, 0, 0,
+                0, 0, 0,
+                0, 0, 0,
+                0, 0, 0,
+                0, 0, 0,  
+                0, 0, 0,
+                0, 0, 0,
+                "", "", 0,
+                0, 0, 0
+        );
+        propertyRepo.save(property);
     }
 }
