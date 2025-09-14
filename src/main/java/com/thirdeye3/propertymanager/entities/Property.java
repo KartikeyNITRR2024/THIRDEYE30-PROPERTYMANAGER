@@ -106,11 +106,14 @@ public class Property {
     @Column(name = "MAXIMUM_NO_OF_USERS", nullable = false)
     private Integer maximumNoOfUsers;
     
-    @Column(name = "MAXIMUM_NO_OF_THRESOLD_PER_USER", nullable = false)
-    private Integer maximumNoOfThresoldPerUser;
+    @Column(name = "MAXIMUM_NO_OF_THRESOLD_PER_GROUP", nullable = false)
+    private Integer maximumNoOfThresoldPerGroup;
     
     @Column(name = "MAXIMUM_NO_OF_HOLDED_STOCK_PER_USER", nullable = false)
     private Integer maximumNoOfHoldedStockPerUser;
+    
+    @Column(name = "MAXIMUM_NO_OF_THRESOLD_GROUP_PER_USER", nullable = false)
+    private Integer maximumNoOfThresoldGroupPerUser;
     
     
     

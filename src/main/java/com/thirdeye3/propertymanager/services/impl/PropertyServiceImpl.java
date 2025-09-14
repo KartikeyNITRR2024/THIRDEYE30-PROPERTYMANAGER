@@ -78,9 +78,9 @@ public class PropertyServiceImpl implements PropertyService {
             Map.entry("TELEGRAMBOT_TOKEN", property.getTelegramBotToken()),
             Map.entry("NO_OF_TELEGRAMBOT", property.getNoOfTelegrambot()),
             Map.entry("MAXIMUM_NO_OF_USERS", property.getMaximumNoOfUsers()),
-            Map.entry("MAXIMUM_NO_OF_THRESOLD_PER_USER", property.getMaximumNoOfThresoldPerUser()),
-            Map.entry("MAXIMUM_NO_OF_HOLDED_STOCK_PER_USER", property.getMaximumNoOfHoldedStockPerUser())
-            
+            Map.entry("MAXIMUM_NO_OF_THRESOLD_PER_GROUP", property.getMaximumNoOfThresoldPerGroup()),
+            Map.entry("MAXIMUM_NO_OF_HOLDED_STOCK_PER_USER", property.getMaximumNoOfHoldedStockPerUser()),
+            Map.entry("MAXIMUM_NO_OF_THRESOLD_GROUP_PER_USER", property.getMaximumNoOfThresoldGroupPerUser())
         );
 
         this.properties = map;
@@ -92,7 +92,7 @@ public class PropertyServiceImpl implements PropertyService {
         if (!configurationService.allowToChange(password)) {
             throw new UnauthorizedUpdateException();
         }
-
+        
         Property property = propertyRepo.findById(configurationService.getConfigurationId())
                 .orElseThrow(() -> new PropertyNotFoundException(configurationService.getConfigurationId()));
 
@@ -136,8 +136,9 @@ public class PropertyServiceImpl implements PropertyService {
                 case "TELEGRAMBOT_USERNAME"                           -> property.setTelegramBotUserName((String) value);
                 case "TELEGRAMBOT_TOKEN"                              -> property.setTelegramBotToken((String) value);
                 case "MAXIMUM_NO_OF_USERS"                            -> property.setMaximumNoOfUsers((Integer) value);
-                case "MAXIMUM_NO_OF_THRESOLD_PER_USER"                -> property.setMaximumNoOfThresoldPerUser((Integer) value);
+                case "MAXIMUM_NO_OF_THRESOLD_PER_GROUP"               -> property.setMaximumNoOfThresoldPerGroup((Integer) value);
                 case "MAXIMUM_NO_OF_HOLDED_STOCK_PER_USER"            -> property.setMaximumNoOfHoldedStockPerUser((Integer) value);
+                case "MAXIMUM_NO_OF_THRESOLD_GROUP_PER_USER"          -> property.setMaximumNoOfThresoldGroupPerUser((Integer) value);
                 
 
                 default -> throw new InvalidPropertyKeyException(key);
