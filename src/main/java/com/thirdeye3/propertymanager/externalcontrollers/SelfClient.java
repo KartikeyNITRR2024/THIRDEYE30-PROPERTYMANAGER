@@ -4,10 +4,12 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import com.thirdeye3.propertymanager.dtos.Response;
+import com.thirdeye3.propertymanager.configs.FeignConfig;
 
 @FeignClient(
     name = "${spring.application.name}", 
-    url = "${self.url:}"                     
+    url = "${self.url:}",
+    configuration = FeignConfig.class
 )
 public interface SelfClient {
 
