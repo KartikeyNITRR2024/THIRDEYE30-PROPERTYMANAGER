@@ -10,42 +10,47 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.scheduling.annotation.Async;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import com.thirdeye3.propertymanager.dtos.Response;
 import com.thirdeye3.propertymanager.dtos.ServiceStatus;
 import com.thirdeye3.propertymanager.services.ConfigurationService;
-import com.thirdeye3.propertymanager.services.PropertyService;
 
 import jakarta.annotation.PostConstruct;
 
 @Component
 public class Initiatier {
-	
+
     private static final Logger logger = LoggerFactory.getLogger(Initiatier.class);
-    
-	@Autowired
-	ConfigurationService configurationService;
-	
-	@Autowired
+
+    @Autowired
+    private ConfigurationService configurationService;
+
+    @Autowired
     private DiscoveryClient discoveryClient;
 
     private final RestTemplate restTemplate = new RestTemplate();
-    
+
     @Value("${thirdeye.priority}")
     private Integer priority;
-    
-	@PostConstruct
-    public void init() throws Exception{
+
+    @Value("${thirdeye.api.key}")
+    private String apiKey;
+
+    @PostConstruct
+    public void init() throws Exception {
         logger.info("Initializing Initiatier...");
-    	TimeUnit.SECONDS.sleep(priority * 3);
+        TimeUnit.SECONDS.sleep(priority * 3);
         configurationService.generateFirstConfiguration();
         logger.info("Initiatier initialized.");
     }
-	
-	public List<ServiceStatus> updateAllInitiatier(Integer priority) {
+
+    public List<ServiceStatus> updateAllInitiatier(Integer priority) {
         List<ServiceStatus> results = new ArrayList<>();
         List<String> services = discoveryClient.getServices();
 
@@ -57,7 +62,19 @@ public class Initiatier {
                 String status;
 
                 try {
-                    Response<String> response = restTemplate.getForObject(url, Response.class);
+                    HttpHeaders headers = new HttpHeaders();
+                    headers.set("THIRDEYE-API-KEY", apiKey);
+
+                    HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+                    ResponseEntity<Response> responseEntity = restTemplate.exchange(
+                            url,
+                            HttpMethod.GET,
+                            entity,
+                            Response.class
+                    );
+
+                    Response<String> response = responseEntity.getBody();
 
                     if (response != null && response.isSuccess()) {
                         status = response.getResponse();
@@ -78,14 +95,9 @@ public class Initiatier {
 
         return results;
     }
-	
-	public void refreshMemory()
-	{
-		logger.info("Going to refersh memory...");
-		logger.info("Memory refreshed.");
-	}
-	
-	
 
+    public void refreshMemory() {
+        logger.info("Going to refresh memory...");
+        logger.info("Memory refreshed.");
+    }
 }
-

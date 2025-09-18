@@ -1,5 +1,7 @@
 package com.thirdeye3.propertymanager.controllers;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,13 +11,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.thirdeye3.propertymanager.dtos.Response;
+import com.thirdeye3.propertymanager.dtos.ServiceStatus;
 import com.thirdeye3.propertymanager.utils.Initiatier;
 
 @RestController
-@RequestMapping("/api/updateinitiatier")
-public class InitiatierController {
+@RequestMapping("/pm/allserviceinitiatier")
+public class AllServiceInitiatierController {
 
-    private static final Logger logger = LoggerFactory.getLogger(InitiatierController.class);
+    private static final Logger logger = LoggerFactory.getLogger(AllServiceInitiatierController.class);
 
     @Autowired
     private Initiatier initiatier;
@@ -24,18 +27,15 @@ public class InitiatierController {
     private Integer priority;
 
     @GetMapping("/{priority}")
-    public Response<String> updateInitiatier(@PathVariable("priority") Integer requestPriority) {
+    public Response<List<ServiceStatus>> updateAllInitiatier(@PathVariable("priority") Integer requestPriority) {
         try {
-            logger.info("Updating initiatier with priority: {}", requestPriority);
-            if(requestPriority<priority)
-            {
-            	initiatier.init();
-                return new Response<>(true, 0, null, "Initiatier updated with priority: " + requestPriority);
-            }
-            return new Response<>(true, 0, null, "Initiatier not insitiatied because priority is low: " + requestPriority);
+            logger.info("Updating all initiatier with priority: {}", priority);
+            List<ServiceStatus> serviceStatues = initiatier.updateAllInitiatier(requestPriority);
+            return new Response<>(true, 0, null, serviceStatues);
         } catch (Exception e) {
             logger.error("Error updating initiatier", e);
             return new Response<>(false, 0, "Failed to update initiatier", null);
         }
     }
 }
+
