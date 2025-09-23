@@ -80,7 +80,8 @@ public class PropertyServiceImpl implements PropertyService {
             Map.entry("MAXIMUM_NO_OF_USERS", property.getMaximumNoOfUsers()),
             Map.entry("MAXIMUM_NO_OF_THRESOLD_PER_GROUP", property.getMaximumNoOfThresoldPerGroup()),
             Map.entry("MAXIMUM_NO_OF_HOLDED_STOCK_PER_USER", property.getMaximumNoOfHoldedStockPerUser()),
-            Map.entry("MAXIMUM_NO_OF_THRESOLD_GROUP_PER_USER", property.getMaximumNoOfThresoldGroupPerUser())
+            Map.entry("MAXIMUM_NO_OF_THRESOLD_GROUP_PER_USER", property.getMaximumNoOfThresoldGroupPerUser()),
+            Map.entry("TIME_GAP_LIST_FOR_THRESOLD_IN_SECONDS", property.getTimeGapListForThresoldInSeconds())
         );
 
         this.properties = map;
@@ -139,8 +140,7 @@ public class PropertyServiceImpl implements PropertyService {
                 case "MAXIMUM_NO_OF_THRESOLD_PER_GROUP"               -> property.setMaximumNoOfThresoldPerGroup((Integer) value);
                 case "MAXIMUM_NO_OF_HOLDED_STOCK_PER_USER"            -> property.setMaximumNoOfHoldedStockPerUser((Integer) value);
                 case "MAXIMUM_NO_OF_THRESOLD_GROUP_PER_USER"          -> property.setMaximumNoOfThresoldGroupPerUser((Integer) value);
-                
-
+                case "TIME_GAP_LIST_FOR_THRESOLD_IN_SECONDS"          -> property.setTimeGapListForThresoldInSeconds((String) value);
                 default -> throw new InvalidPropertyKeyException(key);
             }
         });

@@ -115,7 +115,7 @@ public class Property {
     @Column(name = "MAXIMUM_NO_OF_THRESOLD_GROUP_PER_USER", nullable = false)
     private Integer maximumNoOfThresoldGroupPerUser;
     
-    
-    
+    @Column(name = "TIME_GAP_LIST_FOR_THRESOLD_IN_SECONDS", nullable = false)
+    private String timeGapListForThresoldInSeconds;
     
 }

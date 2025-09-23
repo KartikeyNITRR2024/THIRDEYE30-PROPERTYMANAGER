@@ -96,7 +96,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
                 0, 0, 0,
                 "", "", 0,
                 0, 0, 0,
-                0
+                0, ""
         );
         propertyRepo.save(property);
     }
