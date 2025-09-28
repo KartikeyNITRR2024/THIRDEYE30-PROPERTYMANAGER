@@ -22,6 +22,7 @@ import com.thirdeye3.propertymanager.services.ConfigurationService;
 import com.thirdeye3.propertymanager.services.MachineService;
 import com.thirdeye3.propertymanager.services.PropertyService;
 import com.thirdeye3.propertymanager.utils.Initiatier;
+import com.thirdeye3.propertymanager.utils.PropertyValidator;
 
 @Service
 public class PropertyServiceImpl implements PropertyService {
@@ -81,7 +82,8 @@ public class PropertyServiceImpl implements PropertyService {
             Map.entry("MAXIMUM_NO_OF_THRESOLD_PER_GROUP", property.getMaximumNoOfThresoldPerGroup()),
             Map.entry("MAXIMUM_NO_OF_HOLDED_STOCK_PER_USER", property.getMaximumNoOfHoldedStockPerUser()),
             Map.entry("MAXIMUM_NO_OF_THRESOLD_GROUP_PER_USER", property.getMaximumNoOfThresoldGroupPerUser()),
-            Map.entry("TIME_GAP_LIST_FOR_THRESOLD_IN_SECONDS", property.getTimeGapListForThresoldInSeconds())
+            Map.entry("TIME_GAP_LIST_FOR_THRESOLD_IN_SECONDS", property.getTimeGapListForThresoldInSeconds()),
+            Map.entry("FILTER_FOR_TIME_THRESOLD", property.getFilterForTimeThresold())
         );
 
         this.properties = map;
@@ -140,7 +142,14 @@ public class PropertyServiceImpl implements PropertyService {
                 case "MAXIMUM_NO_OF_THRESOLD_PER_GROUP"               -> property.setMaximumNoOfThresoldPerGroup((Integer) value);
                 case "MAXIMUM_NO_OF_HOLDED_STOCK_PER_USER"            -> property.setMaximumNoOfHoldedStockPerUser((Integer) value);
                 case "MAXIMUM_NO_OF_THRESOLD_GROUP_PER_USER"          -> property.setMaximumNoOfThresoldGroupPerUser((Integer) value);
-                case "TIME_GAP_LIST_FOR_THRESOLD_IN_SECONDS"          -> property.setTimeGapListForThresoldInSeconds((String) value);
+                case "TIME_GAP_LIST_FOR_THRESOLD_IN_SECONDS"          -> {
+                	PropertyValidator.timeGapListForThresoldInSecondsValidator((String) value);
+                	property.setTimeGapListForThresoldInSeconds((String) value);
+                }
+                case "FILTER_FOR_TIME_THRESOLD"                       -> {
+                	PropertyValidator.filterForTimeThresoldValidater((String) value);
+                	property.setFilterForTimeThresold((String) value);
+                }
                 default -> throw new InvalidPropertyKeyException(key);
             }
         });

@@ -118,4 +118,7 @@ public class Property {
     @Column(name = "TIME_GAP_LIST_FOR_THRESOLD_IN_SECONDS", nullable = false)
     private String timeGapListForThresoldInSeconds;
     
+    @Column(name = "FILTER_FOR_TIME_THRESOLD", nullable = false)
+    private String filterForTimeThresold;
+    
 }
