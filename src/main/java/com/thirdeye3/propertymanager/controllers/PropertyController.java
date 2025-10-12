@@ -31,6 +31,11 @@ public class PropertyController {
     public Response<Map<String, Object>> getForTelegrambot(@PathVariable("id") Integer telegrambotId, @PathVariable("code") String telegrambotCode) {
         return new Response<>(true, 0, null, propertyService.getPropertiesForTelegramBot(telegrambotId, telegrambotCode));
     }
+    
+    @GetMapping("/frontend")
+    public Response<Map<String, Object>> getForFrontend() {
+        return new Response<>(true, 0, null, propertyService.getPropertiesForFrontend());
+    }
 
     @PostMapping("/update")
     public Response<List<ServiceStatus>> updateProperties(

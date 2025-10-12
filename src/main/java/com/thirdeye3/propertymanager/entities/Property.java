@@ -62,8 +62,7 @@ public class Property {
 
     @Column(name = "MP_END_SECOND")
     private Integer mpEndSecond;
-
-    // 🔹 Evening Price Window
+    
     @Column(name = "EP_START_HOUR")
     private Integer epStartHour;
 
@@ -93,12 +92,6 @@ public class Property {
     
     @Column(name = "MAXIMUM_MESSAGE_READ_FROM_MESSAGE_BROKER", nullable = false)
     private Integer maximumMessageReadFromMessageBroker;
-    
-    @Column(name = "TELEGRAMBOT_USERNAME", nullable = false)
-    private String telegramBotUserName;
-    
-    @Column(name = "TELEGRAMBOT_TOKEN", nullable = false)
-    private String telegramBotToken;
     
     @Column(name = "NO_OF_TELEGRAMBOT", nullable = false)
     private Integer noOfTelegrambot;

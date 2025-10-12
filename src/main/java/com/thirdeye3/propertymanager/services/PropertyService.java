@@ -17,4 +17,6 @@ public interface PropertyService {
 
 	Map<String, Object> getPropertiesForTelegramBot(Integer machineid, String machineUniqueCode);
 
+	Map<String, Object> getPropertiesForFrontend();
+
 }

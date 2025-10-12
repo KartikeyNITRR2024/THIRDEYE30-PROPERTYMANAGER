@@ -21,6 +21,7 @@ import com.thirdeye3.propertymanager.repositories.PropertyRepo;
 import com.thirdeye3.propertymanager.services.ConfigurationService;
 import com.thirdeye3.propertymanager.services.MachineService;
 import com.thirdeye3.propertymanager.services.PropertyService;
+import com.thirdeye3.propertymanager.services.TelegrambotService;
 import com.thirdeye3.propertymanager.utils.Initiatier;
 import com.thirdeye3.propertymanager.utils.PropertyValidator;
 
@@ -34,6 +35,9 @@ public class PropertyServiceImpl implements PropertyService {
 
     @Autowired
     private MachineService machineService;
+    
+    @Autowired
+    private TelegrambotService telegrambotService;
 
     private Map<String, Object> properties = null;
 
@@ -75,8 +79,6 @@ public class PropertyServiceImpl implements PropertyService {
             Map.entry("SIZE_TO_LOAD_STOCK", property.getSizeToLoadStock()),
             Map.entry("MAXIMUM_MESSAGE_LENGTH", property.getMaximumMessageLength()),
             Map.entry("MAXIMUM_MESSAGE_READ_FROM_MESSAGE_BROKER", property.getMaximumMessageReadFromMessageBroker()),
-            Map.entry("TELEGRAMBOT_USERNAME", property.getTelegramBotUserName()),
-            Map.entry("TELEGRAMBOT_TOKEN", property.getTelegramBotToken()),
             Map.entry("NO_OF_TELEGRAMBOT", property.getNoOfTelegrambot()),
             Map.entry("MAXIMUM_NO_OF_USERS", property.getMaximumNoOfUsers()),
             Map.entry("MAXIMUM_NO_OF_THRESOLD_PER_GROUP", property.getMaximumNoOfThresoldPerGroup()),
@@ -136,8 +138,6 @@ public class PropertyServiceImpl implements PropertyService {
                 case "SIZE_TO_LOAD_STOCK"           				  -> property.setSizeToLoadStock((Integer) value); 
                 case "MAXIMUM_MESSAGE_LENGTH"       				  -> property.setMaximumMessageLength((Integer) value); 
                 case "MAXIMUM_MESSAGE_READ_FROM_MESSAGE_BROKER"       -> property.setMaximumMessageReadFromMessageBroker((Integer) value);
-                case "TELEGRAMBOT_USERNAME"                           -> property.setTelegramBotUserName((String) value);
-                case "TELEGRAMBOT_TOKEN"                              -> property.setTelegramBotToken((String) value);
                 case "MAXIMUM_NO_OF_USERS"                            -> property.setMaximumNoOfUsers((Integer) value);
                 case "MAXIMUM_NO_OF_THRESOLD_PER_GROUP"               -> property.setMaximumNoOfThresoldPerGroup((Integer) value);
                 case "MAXIMUM_NO_OF_HOLDED_STOCK_PER_USER"            -> property.setMaximumNoOfHoldedStockPerUser((Integer) value);
@@ -191,9 +191,23 @@ public class PropertyServiceImpl implements PropertyService {
         }
         Map<String, Object> propertiesForTelegrambot = new HashMap<>();
         propertiesForTelegrambot.put("MACHINE_NO", machineService.validateMachine(machineid, machineUniqueCode));
-        propertiesForTelegrambot.put("TELEGRAMBOT_USERNAME", properties.get("TELEGRAMBOT_USERNAME"));
-        propertiesForTelegrambot.put("TELEGRAMBOT_TOKEN", properties.get("TELEGRAMBOT_TOKEN"));
         propertiesForTelegrambot.put("MAXIMUM_MESSAGE_READ_FROM_MESSAGE_BROKER", properties.get("MAXIMUM_MESSAGE_READ_FROM_MESSAGE_BROKER"));
         return propertiesForTelegrambot;
     }
+
+	@Override
+	public Map<String, Object> getPropertiesForFrontend() {
+        if (properties == null) {
+            updateProperties();
+        }
+        Map<String, Object> propertiesForFrontend = new HashMap<>();
+        propertiesForFrontend.put("MAXIMUM_NO_OF_THRESOLD_PER_GROUP", properties.get("MAXIMUM_NO_OF_THRESOLD_PER_GROUP"));
+        propertiesForFrontend.put("MAXIMUM_NO_OF_HOLDED_STOCK_PER_USER", properties.get("MAXIMUM_NO_OF_HOLDED_STOCK_PER_USER"));
+        propertiesForFrontend.put("MAXIMUM_NO_OF_THRESOLD_GROUP_PER_USER", properties.get("MAXIMUM_NO_OF_THRESOLD_GROUP_PER_USER"));
+        propertiesForFrontend.put("TIME_GAP_LIST_FOR_THRESOLD_IN_SECONDS", properties.get("TIME_GAP_LIST_FOR_THRESOLD_IN_SECONDS"));
+        propertiesForFrontend.put("ALL_ACTIVE_BOTS", telegrambotService.getAllActiveBotNames().toString());
+        return propertiesForFrontend;
+	}
+	
+
 }
