@@ -1,9 +1,9 @@
 package com.thirdeye3.propertymanager.controllers;
 
+import com.thirdeye3.propertymanager.dtos.Response;
 import com.thirdeye3.propertymanager.dtos.TelegrambotDto;
 import com.thirdeye3.propertymanager.services.TelegrambotService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,33 +16,38 @@ public class TelegrambotController {
     private TelegrambotService telegrambotService;
 
     @PostMapping
-    public ResponseEntity<TelegrambotDto> createBot(@RequestBody TelegrambotDto botDto) {
-        return ResponseEntity.ok(telegrambotService.createTelegrambot(botDto));
+    public Response<TelegrambotDto> createBot(@RequestBody TelegrambotDto botDto) {
+        TelegrambotDto dto = telegrambotService.createTelegrambot(botDto);
+        return new Response<>(true, 0, null, dto);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteBot(@PathVariable Long id) {
+    public Response<Void> deleteBot(@PathVariable Long id) {
         telegrambotService.deleteTelegrambot(id);
-        return ResponseEntity.noContent().build();
+        return new Response<>(true, 0, null, null);
     }
+
     @GetMapping
-    public ResponseEntity<List<TelegrambotDto>> getAllBots() {
-        return ResponseEntity.ok(telegrambotService.getAllTelegrambots());
+    public Response<List<TelegrambotDto>> getAllBots() {
+        List<TelegrambotDto> bots = telegrambotService.getAllTelegrambots();
+        return new Response<>(true, 0, null, bots);
     }
 
     @GetMapping("/active")
-    public ResponseEntity<List<TelegrambotDto>> getAllActiveBots() {
-        return ResponseEntity.ok(telegrambotService.getAllActiveBots());
+    public Response<List<TelegrambotDto>> getAllActiveBots() {
+        List<TelegrambotDto> bots = telegrambotService.getAllActiveBots();
+        return new Response<>(true, 0, null, bots);
     }
 
     @PatchMapping("/{id}/activate")
-    public ResponseEntity<TelegrambotDto> activateBot(@PathVariable Long id) {
-        return ResponseEntity.ok(telegrambotService.activateBot(id));
+    public Response<TelegrambotDto> activateBot(@PathVariable Long id) {
+        TelegrambotDto dto = telegrambotService.activateBot(id);
+        return new Response<>(true, 0, null, dto);
     }
 
     @PatchMapping("/{id}/deactivate")
-    public ResponseEntity<TelegrambotDto> deactivateBot(@PathVariable Long id) {
-        return ResponseEntity.ok(telegrambotService.deactivateBot(id));
+    public Response<TelegrambotDto> deactivateBot(@PathVariable Long id) {
+        TelegrambotDto dto = telegrambotService.deactivateBot(id);
+        return new Response<>(true, 0, null, dto);
     }
 }
-
