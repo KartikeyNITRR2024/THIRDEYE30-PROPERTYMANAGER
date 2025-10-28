@@ -85,7 +85,8 @@ public class PropertyServiceImpl implements PropertyService {
             Map.entry("MAXIMUM_NO_OF_HOLDED_STOCK_PER_USER", property.getMaximumNoOfHoldedStockPerUser()),
             Map.entry("MAXIMUM_NO_OF_THRESOLD_GROUP_PER_USER", property.getMaximumNoOfThresoldGroupPerUser()),
             Map.entry("TIME_GAP_LIST_FOR_THRESOLD_IN_SECONDS", property.getTimeGapListForThresoldInSeconds()),
-            Map.entry("FILTER_FOR_TIME_THRESOLD", property.getFilterForTimeThresold())
+            Map.entry("FILTER_FOR_TIME_THRESOLD", property.getFilterForTimeThresold()),
+            Map.entry("BUFFER_TIME_GAP_IN_SECONDS", property.getBufferTimeGapInSeconds())
         );
 
         this.properties = map;
