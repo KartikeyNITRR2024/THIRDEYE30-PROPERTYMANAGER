@@ -95,7 +95,7 @@ public class Initiatier {
                 results.add(new ServiceStatus(serviceName, url, status));
             }
         }
-        configurationService.updateUpdatingServices(true);
+        configurationService.updateUpdatingServices(false);
         logger.info("Completed updating other microservices");
     }
 
