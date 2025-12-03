@@ -32,6 +32,6 @@ public class Configuration {
     @Column(name = "PASSWORD", nullable = false)
     private String password;
     
-    
-
+    @Column(name = "UPDATING_SERVICES", nullable=false)
+    private Boolean updatingServices;
 }

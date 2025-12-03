@@ -14,6 +14,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -50,10 +51,11 @@ public class Initiatier {
         logger.info("Initiatier initialized.");
     }
 
-    public List<ServiceStatus> updateAllInitiatier(Integer priority) {
+    @Async
+    public void updateAllInitiatier(Integer priority) {
         List<ServiceStatus> results = new ArrayList<>();
         List<String> services = discoveryClient.getServices();
-
+        configurationService.updateUpdatingServices(true);
         for (String serviceName : services) {
             List<ServiceInstance> instances = discoveryClient.getInstances(serviceName);
 
@@ -92,8 +94,7 @@ public class Initiatier {
                 results.add(new ServiceStatus(serviceName, url, status));
             }
         }
-
-        return results;
+        configurationService.updateUpdatingServices(true);
     }
 
     public void refreshMemory() {

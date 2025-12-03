@@ -49,10 +49,13 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
     @Override
     public Long getConfigurationId() {
-        if (configurationId == null) {
-            readConfiguration();
-        }
-        return configurationId;
+        return propertyId;
+    }
+    
+    @Override
+    public Boolean isConfigUpdating() {
+    	Configuration config = configurationRepo.findByConfigId(getConfigurationId());
+        return config.getUpdatingServices();
     }
 
     @Override
@@ -77,10 +80,22 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 	@Override
     public void generateFirstConfiguration()
     {
-    	Configuration config = new Configuration(1L, propertyId, propertyPassword);
-    	configurationRepo.save(config);
-    	generateFirstProperty();
+		Optional<Configuration> configCheck = configurationRepo.findById(1L);
+        if (configCheck.isEmpty()) {
+        	Configuration config = new Configuration(1L, propertyId, propertyPassword, false);
+        	configurationRepo.save(config);
+        	generateFirstProperty();
+        } else {
+        	logger.info("Configuration is allready present. Skiping creation.");
+        }
+    	
     }
+	
+	@Override
+	public void updateUpdatingServices(Boolean check)
+	{
+		configurationRepo.updateUpdatingServicesByConfigId(getConfigurationId(), check);
+	}
 	
 	@Override
     public void generateFirstProperty() {

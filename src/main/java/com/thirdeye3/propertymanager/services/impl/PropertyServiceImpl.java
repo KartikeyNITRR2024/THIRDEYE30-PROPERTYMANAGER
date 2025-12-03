@@ -94,7 +94,7 @@ public class PropertyServiceImpl implements PropertyService {
     }
 
     @Override
-    public List<ServiceStatus> updateProperty(Map<String, Object> updates, String password) {
+    public void updateProperty(Map<String, Object> updates, String password) {
         if (!configurationService.allowToChange(password)) {
             throw new UnauthorizedUpdateException();
         }
@@ -156,9 +156,8 @@ public class PropertyServiceImpl implements PropertyService {
         });
         propertyRepo.save(property);
         updateProperties();
-        List<ServiceStatus> serviceInitiatierStatuses = initiatier.updateAllInitiatier(priority);
+        initiatier.updateAllInitiatier(priority);
         logger.info("Updated property with id={} using updates: {}", configurationService.getConfigurationId(), updates);
-        return serviceInitiatierStatuses;
     }
 
     @Override
@@ -167,6 +166,12 @@ public class PropertyServiceImpl implements PropertyService {
             updateProperties();
         }
         return this.properties;
+    }
+    
+    @Override
+    public Boolean isServicesUpdating()
+    {
+    	return false;
     }
 
     @Override

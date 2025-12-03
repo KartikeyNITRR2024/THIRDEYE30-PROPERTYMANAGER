@@ -27,11 +27,11 @@ public class AllServiceInitiatierController {
     private Integer priority;
 
     @GetMapping("/{priority}")
-    public Response<List<ServiceStatus>> updateAllInitiatier(@PathVariable("priority") Integer requestPriority) {
+    public Response<Boolean> updateAllInitiatier(@PathVariable("priority") Integer requestPriority) {
         try {
             logger.info("Updating all initiatier with priority: {}", priority);
-            List<ServiceStatus> serviceStatues = initiatier.updateAllInitiatier(requestPriority);
-            return new Response<>(true, 0, null, serviceStatues);
+            initiatier.updateAllInitiatier(requestPriority);
+            return new Response<>(true, 0, null, true);
         } catch (Exception e) {
             logger.error("Error updating initiatier", e);
             return new Response<>(false, 0, "Failed to update initiatier", null);

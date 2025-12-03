@@ -12,4 +12,8 @@ public interface ConfigurationService {
 
 	void generateFirstProperty();
 
+	void updateUpdatingServices(Boolean check);
+
+	Boolean isConfigUpdating();
+
 }

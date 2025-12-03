@@ -9,7 +9,7 @@ public interface PropertyService {
 
 	Map<String, Object> getProperties();
 
-	List<ServiceStatus> updateProperty(Map<String, Object> updates, String password);
+	void updateProperty(Map<String, Object> updates, String password);
 
 	void updateProperties();
 
@@ -18,5 +18,7 @@ public interface PropertyService {
 	Map<String, Object> getPropertiesForTelegramBot(Integer machineid, String machineUniqueCode);
 
 	Map<String, Object> getPropertiesForFrontend();
+
+	Boolean isServicesUpdating();
 
 }

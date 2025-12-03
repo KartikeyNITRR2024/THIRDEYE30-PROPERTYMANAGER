@@ -22,6 +22,11 @@ public class PropertyController {
         return new Response<>(true, 0, null, propertyService.getProperties());
     }
     
+    @GetMapping("/servicesupdating")
+    public Response<Boolean> servicesUpdating() {
+        return new Response<>(true, 0, null, propertyService.isServicesUpdating());
+    }
+    
     @GetMapping("/webscrapper/{id}/{code}")
     public Response<Map<String, Object>> getForWebscrapper(@PathVariable("id") Integer webscrapperId, @PathVariable("code") String webscrapperCode) {
         return new Response<>(true, 0, null, propertyService.getPropertiesForWebscrapper(webscrapperId, webscrapperCode));
@@ -38,8 +43,9 @@ public class PropertyController {
     }
 
     @PostMapping("/update")
-    public Response<List<ServiceStatus>> updateProperties(
+    public Response<Boolean> updateProperties(
             @RequestBody UpdateProperty updateProperty) {
-        return new Response<>(true, 0, null, propertyService.updateProperty(updateProperty.getUpdates(), updateProperty.getPassword()));
+    	propertyService.updateProperty(updateProperty.getUpdates(), updateProperty.getPassword());
+        return new Response<>(true, 0, null, true);
     }
 }
