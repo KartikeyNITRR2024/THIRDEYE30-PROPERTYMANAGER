@@ -171,7 +171,7 @@ public class PropertyServiceImpl implements PropertyService {
     @Override
     public Boolean isServicesUpdating()
     {
-    	return false;
+    	return configurationService.isConfigUpdating();
     }
 
     @Override

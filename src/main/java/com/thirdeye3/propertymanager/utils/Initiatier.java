@@ -53,6 +53,7 @@ public class Initiatier {
 
     @Async
     public void updateAllInitiatier(Integer priority) {
+    	logger.info("Start updating other microservices");
         List<ServiceStatus> results = new ArrayList<>();
         List<String> services = discoveryClient.getServices();
         configurationService.updateUpdatingServices(true);
@@ -95,6 +96,7 @@ public class Initiatier {
             }
         }
         configurationService.updateUpdatingServices(true);
+        logger.info("Completed updating other microservices");
     }
 
     public void refreshMemory() {
