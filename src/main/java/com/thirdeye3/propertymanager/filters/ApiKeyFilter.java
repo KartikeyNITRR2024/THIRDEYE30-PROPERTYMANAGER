@@ -18,17 +18,18 @@ public class ApiKeyFilter extends OncePerRequestFilter {
     @Value("${thirdeye.api.key}")
     private String apiKey;
 
-    @Value("${self.url}")
-    private String selfUrl;
-
     private static final ObjectMapper objectMapper = new ObjectMapper();
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getRequestURI();
+        return path.startsWith("/api/statuschecker");
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-
-        String requestUrl = request.getRequestURL().toString();
 
         String requestApiKey = request.getHeader("THIRDEYE-API-KEY");
         if (requestApiKey == null) {
@@ -49,4 +50,3 @@ public class ApiKeyFilter extends OncePerRequestFilter {
         response.getWriter().write(objectMapper.writeValueAsString(res));
     }
 }
-
